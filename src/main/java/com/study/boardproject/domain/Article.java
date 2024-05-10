@@ -24,9 +24,8 @@ import java.util.Set;
         @Index(columnList = "createdAt"),
         @Index(columnList = "createdBy"),
 })
-@EntityListeners(AuditingEntityListener.class)
 @Entity // 엔티티 명시
-public class Article {
+public class Article extends AuditingFields {
 
     @Id // PK 필수 명시
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동으로 auto Increment를 걸어주기 위해 사용
@@ -43,13 +42,6 @@ public class Article {
     // 두 테이블을 매핑하기 위해서 작성, 작성하지 않으면 매핑하는 두 테이블을 합쳐서 테이블을 만들어버림
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)  // article 테이블로 부터 온 것이라는 의미
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
-
-    // 메타데이터는 자동으로 JPA가 세팅하기 함
-    @CreatedDate @Column(nullable = false) private LocalDateTime createdAt; // 생성일시
-    @CreatedBy @Column(nullable = false, length = 100) private String createdBy; // 생성자
-    @LastModifiedDate @Column(nullable = false) private LocalDateTime modifiedAt; // 수정일시
-    @LastModifiedBy @Column(nullable = false, length = 100) private String modifiedBy; // 수정자
-
 
     // 기본 생성자, Article 클래스는 엔티티이기 때문에 private 을 사용 불가능하고, public 혹은 protected (아무 인지 없는 기본 생성자)를 사용해야 함.
     protected Article() {}
